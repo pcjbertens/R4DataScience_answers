@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
 ```
-# Exercises page 6 + 7
+# Introduction
 ## 1
 Run ggplot(data = mpg). What do you see?
 ```{r}
@@ -39,8 +39,8 @@ ggplot(data = mpg) +
 ```
 The plot is not useful because it's a scatter of two categorical-variables data.
 
-# Exercises page 12 + 13
-## 2
+# Aesthetic Mappings
+## 1
 What's gone wrong with the code? Why are the points not blue?
 ```{r}
 ggplot(data = mpg) +
@@ -134,5 +134,77 @@ ggplot(data = mpg) +
 ```
 It returns in a logical output (TRUE when displ < 5 and FALSE when displ > 5)
 
+# Common Problems
+## 1
+What happens if you facet on a continuous variable?
+```{r}
+ggplot(data = mpg) +
+  geom_point(
+    mapping = aes(x = displ, y = hwy)) +
+  facet_grid(rows = "cty")
+```
+Every value gives a facet.
 
+## 2
+What do empty cells in a plot with facet_grid(drv ~ cyl) mean? How do they relate to this plot?
+```{r}
+ggplot(data = mpg) +
+  geom_point(
+    mapping = aes(x = drv, y = cyl)) +
+  facet_grid(drv ~ cyl)
+```
+Empty cells in a facet_grid means that ther are no values in that facet. eg. there are no values in drv = r and cyl = 4
+
+## What plots does the following code make? what does . do?
+```{r}
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  facet_grid(drv ~.)
+```
+It facets only in rows on variable drv (facet_grid(rows = "drv") gives the same result)
+
+```{r}
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  facet_grid(. ~ cyl)
+```
+
+It facets only in columns on variable cyl.
+
+## 4
+Take the first faceted plot in this section:
+```{r}
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  facet_wrap(~ class, nrow = 2)
+```
+What are the advantages to using faceting instead of the color aesthetic? What are the disadvantages? How might the balance change if you had a larger dataset?
+Advantages using facets:
+- It is easier to compare the different types within a variable
+- Single plot per variable
+- You can compare different variables
+
+Disadvantages using facets:
+- You get a lot of single plots when there are a lot of different types within a variable
+
+## 5
+Read ?facet_wrap. What does nrow do? What does ncol do? What other options control the layout of the individual panels? Why doesn't facet_grid have nrow and ncol variables?
+
+With nrow and ncol you can set the number of rows and columns within the facet_wrap.
+Other options to control the layout of individual panels:
+- scales
+
+## 6
+When using facet_grid() you should usually put the variable with more unique levels in the colymns. Why?
+```{r}
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  facet_grid(manufacturer ~ cyl)
+```
+```{r}
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  facet_grid(cyl ~ manufacturer)
+```
+The readability of plots is better.
 
